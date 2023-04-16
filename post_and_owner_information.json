@@ -1,0 +1,86 @@
+{
+    "response": [
+        {
+            "comments": {
+                "count": 3
+            },
+            "hash": "QlX72KK-8WI4zkPUdg",
+            "type": "post",
+            "attachments": [
+                {
+                    "type": "photo",
+                    "photo": {
+                        "album_id": -7,
+                        "date": 1661273334,
+                        "id": 457239352,
+                        "owner_id": 669396884,
+                        "access_key": "d0101b744e85e2eced",
+                        "post_id": 517,
+                        "sizes": [
+                            {
+                                "height": 130,
+                                "type": "m",
+                                "width": 100,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=100x130&quality=96&sign=58396704b35e1b6d7c93a587a81d7074&c_uniq_tag=B5nuPg6daGgOXOxmp-r8L0tYE0yGBidjmoXSZlBpx-g&type=album"
+                            },
+                            {
+                                "height": 170,
+                                "type": "o",
+                                "width": 130,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=130x170&quality=96&sign=e1407f204a7238b6162f1dbfd2ec1b2d&c_uniq_tag=pLeARgXXI6ctSUc0LKjTuxdUBa0GHX33tVMzkQwAQ8k&type=album"
+                            },
+                            {
+                                "height": 261,
+                                "type": "p",
+                                "width": 200,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=200x261&quality=96&sign=8e71baa1a57eb9b1e40667009afaa1a6&c_uniq_tag=Zuaz0cWQm4ZqMcWGKtXoyQxaEhw3cK4LjrSPB_HrK0Q&type=album"
+                            },
+                            {
+                                "height": 417,
+                                "type": "q",
+                                "width": 320,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=320x417&quality=96&sign=3b1f1f1e0325e74c848554415c94a368&c_uniq_tag=vOVxOn8ntH9pxsN-8Cdm2xr1d33VsPCwvVIo35AZvv8&type=album"
+                            },
+                            {
+                                "height": 591,
+                                "type": "r",
+                                "width": 453,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=453x591&quality=96&sign=257fa808cb4395aa8bca6757fe7bade3&c_uniq_tag=AekAKJWGLfDe9oL3c4RUzaU1ZsWEerveBveYcfBfXdQ&type=album"
+                            },
+                            {
+                                "height": 75,
+                                "type": "s",
+                                "width": 57,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=57x75&quality=96&sign=ad94ead2722da90e99290e26b0108a97&c_uniq_tag=x9h6SAQwdLezkbLPvCcN5wAvHUVB-t-mK7FnRCnjCPk&type=album"
+                            },
+                            {
+                                "height": 591,
+                                "type": "x",
+                                "width": 453,
+                                "url": "https://sun9-48.userapi.com/impg/TwE5Nil_rCm3KTK99YP9dpShxyeTD9tfEXHHQw/B9V7XXWASvE.jpg?size=453x591&quality=96&sign=257fa808cb4395aa8bca6757fe7bade3&c_uniq_tag=AekAKJWGLfDe9oL3c4RUzaU1ZsWEerveBveYcfBfXdQ&type=album"
+                            }
+                        ],
+                        "text": ""
+                    }
+                }
+            ],
+            "date": 1661325960,
+            "from_id": 669396884,
+            "id": 517,
+            "likes": {
+                "can_like": 0,
+                "count": 119,
+                "user_likes": 0
+            },
+            "owner_id": 669396884,
+            "post_type": "post",
+            "reposts": {
+                "count": 3
+            },
+            "text": "Ветеран !!",
+            "views": {
+                "count": 3267
+            }
+        }
+    ]
+}
