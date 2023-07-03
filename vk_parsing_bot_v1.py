@@ -1,18 +1,22 @@
 import telebot
 from telebot import types
 import requests
-import json
 from datetime import datetime
-import ast
 import requests
-from bs4 import BeautifulSoup as bs
-import fake_useragent
 
+#Токены
 bot = telebot.TeleBot('6126109448:AAHoIcLe8it1cA20SwZH6ZKkdMabIme2OFU')
+token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
+
+#Счётчики
 count=0
 count2=0
 count1=0
-res=''
+count3=0
+v=0
+
+#Сборщики информации
+
 result=''
 finally_result=''
 posts={}
@@ -20,126 +24,87 @@ a=''
 keyboard=''
 pars=''
 photo_list=[]
-v=0
-token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
-count3=0
-ept=''
 n=''
 src=''
 res1=0
 owner_id=''
 url_for_pop=''
 start_or_stop=0
-domain_or_owner=0
 criteries=0
+
+#Функция парсинга информации
 class Pars():
 
-    def start():
+    def start(): #Функция по обработке ссылки
         try:
-            global result
-            global res
-            global posts
-            global ept
-            global owner_id
-            global src
-            global domain_or_owner
+            global result,posts,owner_id,src,token
 
-            owner_id=''
+            if owner_id.replace('https://vk.com/wall','')==owner_id:
 
-            if res.replace('https://vk.com/id','')!=res:
-                
-                res=res.replace('https://vk.com/id','')
-                owner_id=res
+                if owner_id.replace('https://vk.com/id','')!=owner_id: #Если ссылка на id
+                    owner_id=owner_id.replace('https://vk.com/id','')
 
-                token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
-                url1=f'https://api.vk.com/method/wall.get?owner_id={res}&access_token={token}&v=5.81'
+                elif owner_id.replace('https://vk.com/club','')!=owner_id: #Если ссылка на клуб
+                    owner_id='-'+ owner_id.replace('https://vk.com/club','')
 
-                req=requests.get(url1)
-                src=req.json()
+                elif owner_id.replace('https://vk.com/public','')!=owner_id: #Если ссылка с публиком
+                    owner_id='-'+owner_id.replace('https://vk.com/public','')
+
+                url=f'https://api.vk.com/method/wall.get?owner_id={owner_id}&access_token={token}&v=5.81' #Создание url для 3 случаев
+                src=requests.get(url).json()
                 posts=src['response']
-                
-            elif res.replace('https://vk.com/club','')!=res:
-                
-                res=res.replace('https://vk.com/club','')
-                owner_id=res
-
-                token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
-                url1=f'https://api.vk.com/method/wall.get?owner_id={res}&access_token={token}&v=5.81'
-
-                req=requests.get(url1)
-                src=req.json()
-                posts=src['response']
-                               
-        
-            elif res.replace('vk.com/public','')!=res:
-                res=res.replace('https://vk.com/public','')
-                owner_id='-'+res
-
-                token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
-                url=f'https://api.vk.com/method/wall.get?owner_id={res}&access_token={token}&v=5.81&extended=1&count=100'
-                req=requests.get(url)
-                src=req.json()
-                with open('post_and_owner_information.json','w',encoding='utf-8') as file:
-                    json.dump(src,file,indent=4,ensure_ascii=False)
-                posts=src['response']
-            elif res.replace('https://vk.com/wall','')!=res:
-                res=res.replace('https://vk.com/wall','')
-
-                token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
-                url=f'https://api.vk.com/method/wall.getById?posts={res}&access_token={token}&v=5.81'
-
-                req=requests.get(url)
-                src=req.json()
-                result=src['response'][0]
-
-                with open('post_and_owner_information.json','w',encoding='utf-8') as file:
-                    json.dump(src,file,indent=4,ensure_ascii=False)
-
 
             else:
-                res=res.replace('https://vk.com/','')
-                owner_id=res
+            
+                if owner_id.replace('https://vk.com/wall','')!=owner_id: #Если ссылка на пост
+                    owner_id=owner_id.replace('https://vk.com/wall','')
+                    url=f'https://api.vk.com/method/wall.getById?posts={owner_id}&access_token={token}&v=5.81'
 
-                token='d06b7235d06b7235d06b723524d37851d6dd06bd06b7235b47c4e741f6dc2323508c054'
-                url1=f'https://api.vk.com/method/wall.get?domain={res}&access_token={token}&v=5.81'
+                    req=requests.get(url)
+                    src=req.json()
+                    result=src['response'][0]
 
-                req=requests.get(url1)
-                src=req.json()
-                posts=src['response']
-                
-                owner_id=posts['items'][0]['owner_id']
+
+                else: #Если ссылка ни к чему не подходит
+                    owner_id=owner_id.replace('https://vk.com/','') 
+                    url1=f'https://api.vk.com/method/wall.get?domain={owner_id}&access_token={token}&v=5.81'
+
+                    req=requests.get(url1)
+                    src=req.json()
+                    posts=src['response']
+
+                    owner_id=posts['items'][0]['owner_id']
+
 
             return 'b'
+        
         except:
             return 'Неправильный url'
 
 
-    def information():
-        global result
-        global finally_result
-        global photo_list
-        global token
-        global v
-        global start_or_stop
-        photo_list=[]
-        if 'copy_history' in result:
-            dop_text=ast.literal_eval(str((dict(result)['copy_history']))[1:-1])
-            result1=f"Текст автора:\n {dict(result)['text']}\n Текст от другой группы в этом посте: \n{dop_text['text']}".replace('\n\n','\n')
-            g=dict(dop_text)['attachments']
-                                                
-            if len(g)==2:
+    def information(): #Функция по поиску информации с поста
+        global result,finally_result,photo_list,token,v,start_or_stop
 
-                if g[0]['type']=='photo':
+        photo_list=[]
+        if 'copy_history' in result: #Если в посте присутствуют история от других пользователей
+
+            result1=f"Текст автора:\n {dict(result)['text']}\n Текст от другой группы в этом посте: \n{result['copy_history'][0]['text']}\n".replace('\n\n','\n')
+            atach=dict(result['copy_history'][0])['attachments']
+                                                
+            if len(atach)==2:
+
+                if atach[0]['type']=='photo':
                     photo_list.append(g['photo']['sizes'][-1]['url'])
                     v=1
-                if g[0]['type']=='video':
+
+                if atach[0]['type']=='video':
                     result1= 'Видео времено недоступно\n'+result1
 
             else:
                 error=''
-                for gf in range(len(g)):
+                for gf in range(len(atach)):
 
-                    d=g[gf]
+                    d=atach[gf]
                     if d['type']=='photo':
                         photo_list.append(d['photo']['sizes'][-1]['url'])
                         v=1
@@ -151,19 +116,19 @@ class Pars():
             result1=f"Текст автора:\n {dict(result)['text']}\n".replace('\n\n','\n')
             g=dict(result)['attachments']
 
-            if len(g)==2:
+            if len(atach)==2:
 
-                if g[0]['type']=='photo':
+                if atach[0]['type']=='photo':
                     photo_list.append(g['photo']['sizes'][-1]['url'])
                     v=1
-                if g[0]['type']=='video':
+                if atach[0]['type']=='video':
                     result1= 'Видео времено недоступно\n'+result1
 
             else:
                 error=''
-                for gf in range(len(g)):
+                for gf in range(len(atach)):
 
-                    d=g[gf]
+                    d=atach[gf]
                     if d['type']=='photo':
                         photo_list.append(d['photo']['sizes'][-1]['url'])
                         v=1
@@ -174,6 +139,7 @@ class Pars():
 
         if 'views' in result:
             result2=f"Просмотры: {dict(result)['views']['count']}"
+
         result3=f"Лайки: {dict(result)['likes']['count']}"
         result4=f"Репосты: {dict(result)['reposts']['count']}"
         result5=f"Комментарии: {dict(result)['comments']['count']}"
@@ -182,62 +148,56 @@ class Pars():
         finally_result='\n'+result1+'\n'+result2+'\n'+result3+'\n'+result4+'\n'+result5+'\n'+result6
         return finally_result
 
-    def how_many_posts():
-        global posts
-        global finally_result
+    def how_many_posts(): #Функция по подсчёту информации с постов
+        global posts,finally_result
 
         finally_result=f"Кол-во постов: {posts['count']}"
         return finally_result
 
 
-    def pop():
-        global token
-        global owner_id
-        global src
-        global url_for_pop
-        global res
-        global start_or_stop
-        global criteries
-        if start_or_stop==1:
-            if criteries==1:
-                criteries1='likes'
+    def pop(): #Функция по поиску популярных постов
+        global token,owner_id,src,url_for_pop,start_or_stop,criteries
+
+        if start_or_stop==1: #По каким критериям будет отбираться посты
+
+            if criteries=='likes':
                 name='\n Кол-во лайков: '
-            elif criteries==2:
-                criteries1='reposts'
+            elif criteries=='reposts':
                 name='\n Кол-во репостов: '
-            elif criteries==3:
-                criteries1='views'
+            elif criteries=='views':
                 name='\n Кол-во просмотров: '
-            elif criteries==4:
-                criteries1='comments'
+            elif criteries=='comments':
                 name='\n Кол-во комментариев: '
+
             start_or_stop=0
             offset=0
-            url=f'https://api.vk.com/method/wall.get?owner_id={owner_id}&count=40&access_token={token}&v=5.81&extended=1'
-            req=requests.get(url)
+            req=requests.get(f'https://api.vk.com/method/wall.get?owner_id={owner_id}&count=40&access_token={token}&v=5.81&extended=1')
             src=req.json()
             all_posts=[]
             posts_for1=src['response']['count']
             pop_id={}
-            while offset<posts_for1:
+
+            while offset<posts_for1: #Цикл котоый будет повторяться по не будут внесены все посты
                 url=f'https://api.vk.com/method/wall.get?owner_id={owner_id}&count=100&access_token={token}&v=5.81&extended=1&count=100&offset={offset}'
-                offset+=100
+                offset+=100 #Каждый раз будут добавляться по 100 постов
                 req=requests.get(url)
                 src=req.json()
+
                 for pop_likes in src['response']['items']:
-                    if 'views' in pop_likes:
-                        pop_id[f"{pop_likes['id']}"]=int(f"{pop_likes[criteries1]['count']}")
+                    if 'views' in pop_likes: #Записывается информация по каждому посту
+                        pop_id[f"{pop_likes['id']}"]=int(f"{pop_likes[criteries]['count']}")
                         a=str(f"{pop_likes['owner_id']}")
                     
             n=0
-            while n!=int(res1):
+            while n!=int(res1): #Отбираються самые популярные посты
                 all_posts.append(dict([max(pop_id.items(), key=lambda k_v: k_v[1])]))
                 delete=dict([max(pop_id.items(), key=lambda k_v: k_v[1])]).keys()
                 for d in delete:
                     del pop_id[f"{d}"]
                 n+=1
             url_for_pop=''
-            for i in range(len(all_posts)):
+
+            for i in range(len(all_posts)): 
                 for h in dict(all_posts[int(i)]).keys():
 
                     url_for_pop+=str(i+1)+'. https://vk.com/wall'+a+'_'+h+name+str(all_posts[int(i)][f'{h}'])+'\n'
@@ -245,45 +205,40 @@ class Pars():
 closed=0
 st=0
 keyboard1=''
+
 @bot.message_handler(commands=['start'])
-def inline_buttons(message):
-    global count
-    global photo_list
-    global closed
-    global keyboard1
-    global st
+
+def inline_buttons(message): #Начальная функция выбора действия, которая работает по комманде старт
+    global closed,keyboard1,st
 
     if count==0:
+
         keyboard1 = types.InlineKeyboardMarkup()
         pars_group = types.InlineKeyboardButton(text='По группе/сообществу/аккаунту 👤', callback_data='pars_group')
         pars_post = types.InlineKeyboardButton(text='По посту 📝 ', callback_data='pars_post')
         posts_on_time=types.InlineKeyboardButton(text='Отправлять посты по времени 🕐 ', callback_data='post_on_time')
+
         keyboard1.add(pars_post)
         keyboard1.add(pars_group)
         keyboard1.add(posts_on_time)
+
         if closed==0:
             st=bot.send_message(message.from_user.id, text='Найти информацию в ВК', reply_markup=keyboard1,disable_web_page_preview=True)
         else:
             bot.send_message(message.chat.id, text='Извинити, функция находиться в процессе разработки \nНайти информацию в ВК', reply_markup=keyboard1,disable_web_page_preview=True)
             closed=0
-        #markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        #btn1 = types.KeyboardButton("👋 Поздороваться")
-        #btn2 = types.KeyboardButton("❓ Задать вопрос")
-        #markup.add(btn1, btn2)
-        #bot.send_message(message.chat.id, text="Привет, {0.first_name}! Я тестовый бот для твоей статьи для habr.com".format(message.from_user), reply_markup=markup)
 
 
 @bot.message_handler(commands=['return'])
-def inline_buttons4(message):
-    global count
-    global n
-    global st
-    global keyboard1
+
+def inline_buttons4(message): #Функция с выыбором действия, которая работает по комманде return
+    global count,n,st,keyboard1
 
     keyboard1 = types.InlineKeyboardMarkup()
     pars_group = types.InlineKeyboardButton(text='По группе/сообществу/аккаунту 👤', callback_data='pars_group')
     pars_post = types.InlineKeyboardButton(text='По посту 📝', callback_data='pars_post')
     posts_on_time=types.InlineKeyboardButton(text='Отправлять посты по времени 🕐', callback_data='post_on_time')
+
     keyboard1.add(pars_post)
     keyboard1.add(pars_group)
     keyboard1.add(posts_on_time)
@@ -294,18 +249,18 @@ def inline_buttons4(message):
     
 @bot.message_handler(commands=['return1'])
 
-def inline_buttons2(message):
-    global count
-    global count2
+def inline_buttons2(message): #Функця которая повторяет поиск по постам
+    global count,count2 
 
     bot.send_message(message.chat.id,text='Вставьте ссылку на пост')
     count2=2
     count=0
 
 @bot.message_handler(commands=['return2'])
-def inline_buttons6(message):
-    global count
-    global count2
+
+def inline_buttons6(message): #Функция которая повторяет поиск по группам
+    global count,count2
+
     bot.send_message(message.chat.id,text='Вставьте ссылку на группу/сообщество/аккаунт')
     count2=1
     count=0
@@ -313,15 +268,10 @@ def inline_buttons6(message):
 
 @bot.callback_query_handler(func=lambda call: True)
 
-def questions(call):
-    global count
-    global count2
-    global res
-    global keyboard1
-    global st
+def questions(call): #Функция которая проверяет на какую кнопку нажата кнопка
+    global count,count2,keyboard1,st
 
-    if call.data=='pars_group' :
-
+    if call.data=='pars_group':
         bot.send_message(call.message.chat.id, text="Вставьте ссылку на группу/сообщество/аккаунт")
         count2=1
 
@@ -345,19 +295,19 @@ def questions(call):
     elif call.data=='post_on_time':
         count2=4
         bot.edit_message_text(chat_id = call.message.chat.id,message_id = st.message_id,text='Извините, функция находиться в процессе разработки \nНайти информацию в ВК',reply_markup=keyboard1)
-        #bot.send_message(call.message.chat.id,text='Вставьте ссылку(-и) на группу(-ы) с которой(-ых)\n будут отправляться посты (каждая ссылка с новой строки)')
+
+    #Проверка кнопок с критериями
+
+    elif call.data=='pop_likes' or call.data=='pop_reposts' or call.data=='pop_views' or call.data=='pop_comments':
         
-    elif call.data=='pop_likes':
-        bot.send_message(call.message.chat.id,text='Сколько поп. постов нужно выслать')
-        count2=12
-    elif call.data=='pop_reposts':
-        count2=9
-        bot.send_message(call.message.chat.id,text='Сколько поп. постов нужно выслать')
-    elif call.data=='pop_views':
-        count2=10
-        bot.send_message(call.message.chat.id,text='Сколько поп. постов нужно выслать')
-    elif call.data=='pop_comments':
-        count2=11
+        if call.data=='pop_likes':
+            count2=12
+        elif call.data=='pop_reposts':
+            count2=9
+        elif call.data=='pop_views':
+            count2=10
+        elif call.data=='pop_comments':
+            count2=11
         bot.send_message(call.message.chat.id,text='Сколько поп. постов нужно выслать')
 
 
@@ -365,20 +315,13 @@ def questions(call):
 
 
 def answer(message):
-    global count
-    global res
-    global count2
-    global a
-    global keyboard
-    global pars
-    global photo_list
-    global v
-    global count3
-    global res1
+    global count,owner_id,count2,a,keyboard,pars,photo_list,v,count3,res1
+    #Копирует url аккаунта
 
-    if count2==1:
+    if count2==1: 
+        
         if 'https://vk.com/' in message.text:
-            res=message.text
+            owner_id=message.text
             inline_buttons1(message)
         else:
             bot.send_message(message.chat.id,'Ошибка ❌\nВставьте правильную ссылку на группу/сообщество/аккаунт')
@@ -387,16 +330,17 @@ def answer(message):
     elif count2==2:
 
         if 'https://vk.com/wall' in message.text:
-            res=message.text
+            owner_id=message.text
             inline_buttons1(message)
         else:
             bot.send_message(message.chat.id,'Ошибка ❌\nВставьте правильную ссылку на пост')
 
-
+    #Высылает информацию о посте
 
     elif count2==3:
         pars_start=Pars.start()
-        if 'Неправильный url' in pars_start:
+
+        if 'Неправильный url' in pars_start: #Проверка на ошибки
             count2=2
             answer(message)
         else:
@@ -412,10 +356,12 @@ def answer(message):
             bot.send_message(message.chat.id,'Информация о посте\n'+b+'\n\nЧтобы начать сначала /return  🔄\nЧтобы повторить поиск /return1   📝',disable_web_page_preview=True)
             count2=2
 
+    #Высылает количество постов на странице
 
     elif count2==5:
         pars_start=Pars.start()
-        if 'Неправильный url' in pars_start:
+
+        if 'Неправильный url' in pars_start: #Проверка на ошибки
             count2=1
             answer(message)
         else:
@@ -424,19 +370,8 @@ def answer(message):
             count=0
             bot.edit_message_text(chat_id = message.chat.id, message_id = a.message_id, text = f"{Pars.how_many_posts()}\nНачать сначала /return 🔄\nПовторить поиск по групппам /return2 👤\n\nВыберите дальнейшее действие ", reply_markup=keyboard)
 
-    #elif count2==4:
-        #c=0
-        #res=''
-        #while c!=5:
-        #    if message.text!=res:
-        #        print(message.text)
-        #        c+=1
-        #    res=message.text
-        #    message.text=''
-        #count2=6
-        #inline_buttons1(message)
 
-    elif count2==7:
+    elif count2==7: #Выбор по критериям
         keyboard=types.InlineKeyboardMarkup()
         pop_likes = types.InlineKeyboardButton(text='Лайкам 👍🏻', callback_data='pop_likes')
         pop_reposts = types.InlineKeyboardButton(text='Репостам 📣', callback_data='pop_reposts')
@@ -450,49 +385,18 @@ def answer(message):
         count=1
         inline_buttons(message)
 
-    elif count2==12:
+    elif count2==12 or count2==9 or count2==10 or count2==11: #Кол-во постов для отбора
+
         if message.text.isdigit():
             res1=message.text
             bot.send_message(message.chat.id,text='Подождите, это может занять несколько минут, взависимости от кол-во постов 🕐')
-            inline_buttons1(message)
-        else:
-            bot.send_message(message.chat.id,text='Ошибка ❌')
-    elif count2==11:
-        if message.text.isdigit():
-            res1=message.text
-            bot.send_message(message.chat.id,text='Подождите, это может занять несколько минут, взависимости от кол-во постов 🕐')
-            inline_buttons1(message)
-        else:
-            bot.send_message(message.chat.id,text='Ошибка ❌')
-    elif count2==10:
-        if message.text.isdigit():
-            res1=message.text
-            bot.send_message(message.chat.id,text='Подождите, это может занять несколько минут, взависимости от кол-во постов 🕐')
-            inline_buttons1(message)
-        else:
+            inline_buttons1(message)           
+        else: #Проверка на ошибки
             bot.send_message(message.chat.id,text='Ошибка ❌')
 
-    elif count2==9:
-        
-        if message.text.isdigit():
-            res1=message.text
-            bot.send_message(message.chat.id,text='Подождите, это может занять несколько минут, взависимости от кол-во постов 🕐')
-            inline_buttons1(message)
-        else:
-            bot.send_message(message.chat.id,text='Ошибка ❌')
 
 def inline_buttons1(message):
-    global count2
-    global count
-    global count1
-    global res
-    global a
-    global keyboard
-    global pars
-    global url_for_pop
-    global start_or_stop
-    global closed
-    global criteries
+    global count2,count,a,keyboard,pars,url_for_pop,start_or_stop,closed,criteries
 
     if count2==1:
         keyboard = types.InlineKeyboardMarkup()
@@ -508,7 +412,7 @@ def inline_buttons1(message):
 
 
 
-    if count2==2:
+    if count2==2: #Получение информации
         keyboard = types.InlineKeyboardMarkup()
         information = types.InlineKeyboardButton(text='Получить информацию 📥', callback_data='information')
         keyboard.add(information)
@@ -516,45 +420,24 @@ def inline_buttons1(message):
         count=1
         inline_buttons(message)
 
-    #elif count2==4:
-    #    #keyboard = types.InlineKeyboardMarkup()
-    #    #tn = types.InlineKeyboardButton(text='10 мин', callback_data='tn')
-    #    #ty = types.InlineKeyboardButton(text='30 мин', callback_data='ty')
-    #    #sy = types.InlineKeyboardButton(text='60 мин', callback_data='sy')
-    #    #keyboard.add(tn,ty,sy)
-    #    #bot.send_message(message.from_user.id, text='Через сколько минут отправлять посты', reply_markup=keyboard)
-    #    #count=1
-    #    closed=1
-    #    inline_buttons(message)
-        
 
-    elif count2==12:
-        criteries=1
+    elif count2==12 or count2==9 or count2==10  or count2==11: #Отправка популярных постов
+        if count2==12:
+            criteries='likes'
+        elif count2==9:
+            criteries='reposts'
+        elif count2==10:
+            criteries='views'
+        elif count2==11:
+            criteries='comments'
+
+
         start_or_stop=1
         Pars.start()
         Pars.pop()
   
         bot.send_message(message.from_user.id,text=url_for_pop+'\nЧтобы повторить - просто введите кол-во нужных постов \nЧтобы начать сначала /return  🔄 \n Чтобы начать поиск по группам /return2 👤 ',disable_web_page_preview=True)
 
-    elif count2==9:
-        criteries=2
-        start_or_stop=1
-        Pars.start()
-        Pars.pop()
-        bot.send_message(message.from_user.id,text=url_for_pop+'\nЧтобы повторить - просто введите кол-во нужных постов \nЧтобы начать сначала /return  🔄 \n Чтобы начать поиск по группам /return2 👤 ',disable_web_page_preview=True)
-    elif count2==10:
-        criteries=3
-        start_or_stop=1
-        Pars.start()
-        Pars.pop()
-        bot.send_message(message.from_user.id,text=url_for_pop+'\nЧтобы повторить - просто введите кол-во нужных постов \nЧтобы начать сначала /return  🔄 \n Чтобы начать поиск по группам /return2 👤 ',disable_web_page_preview=True)
-    elif count2==11:
-        criteries=4
-        start_or_stop=1
-        Pars.start()
-        Pars.pop()
-        bot.send_message(message.chat.id,text=url_for_pop+'\n\nЧтобы повторить - просто введите кол-во нужных постов \nЧтобы начать сначала /return  🔄 \n Чтобы начать поиск по группам /return2 👤 ',disable_web_page_preview=True)
 
-
-if __name__ == '__main__':
+if __name__ == '__main__': #Запуск бота
     bot.infinity_polling()
